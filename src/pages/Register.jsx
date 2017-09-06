@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {inject, observer} from 'mobx-react';
-import { Form, Input, Checkbox, Button, message } from 'antd';
+import { Form, Input, Checkbox, Button, Icon, Spin, message } from 'antd';
 import {Link, withRouter} from 'react-router-dom'
+
+import './Register.css';
 
 const FormItem = Form.Item;
 
@@ -23,7 +25,8 @@ class RegistrationForm extends Component {
         this.props.user.register(formData)
             .then(result => {
                 if(!result.status){
-                    message.error('Network error...')
+                    message.error(result.msg);
+                    this.props.form.resetFields();
                 }else {
                     message.success('Register success, will redirect to login page...');
                     setTimeout(() => {this.props.history.replace('/login')}, 2000)
@@ -35,7 +38,7 @@ class RegistrationForm extends Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                this.fireRegister(values)
+                this.fireRegister(this.props.form.getFieldsValue())
             }
         });
     };
@@ -62,95 +65,55 @@ class RegistrationForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24, offset: 0 },
-                sm: { span: 6, offset: 3 },
-                md: { span: 6, offset: 3 },
-                lg: { span: 6, offset: 3 },
-                xl: { span: 6, offset: 3 },
-            },
-            wrapperCol: {
-                xs: { span: 24, offset: 0 },
-                sm: { span: 6 },
-                md: { span: 6 },
-                lg: { span: 6 },
-                xl: { span: 6},
-            },
-        };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0,
-                },
-                sm: { span: 6, offset: 9 },
-                md: { span: 6, offset: 9 },
-                lg: { span: 6, offset: 9 },
-                xl: { span: 6, offset: 9 },
-            },
-        };
+        const {isLoading} = this.props.user;
 
         return (
-                <Form onSubmit={this.handleSubmit}>
-                    <FormItem
-                        {...formItemLayout}
-                        label="E-mail"
-                        hasFeedback
-                    >
-                        {getFieldDecorator('email', {
-                            rules: [{
-                                type: 'email', message: 'The input is not valid E-mail!',
-                            }, {
-                                required: true, message: 'Please input your E-mail!',
-                            }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="Password"
-                        hasFeedback
-                    >
-                        {getFieldDecorator('password', {
-                            rules: [{
-                                required: true, message: 'Please input your password!',
-                            }, {
-                                validator: this.checkConfirm,
-                            }],
-                        })(
-                            <Input type="password" />
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="Confirm Password"
-                        hasFeedback
-                    >
-                        {getFieldDecorator('retype_password', {
-                            rules: [{
-                                required: true, message: 'Please confirm your password!',
-                            }, {
-                                validator: this.checkPassword,
-                            }],
-                        })(
-                            <Input type="password" onBlur={this.handleConfirmBlur} />
-                        )}
-                    </FormItem>
-                    <FormItem {...tailFormItemLayout} style={{ marginBottom: 8 }}>
-                        {getFieldDecorator('agreement', {
-                            valuePropName: 'checked',
-                        })(
-                            <Checkbox>I have read the <a href="">agreement</a></Checkbox>
-                        )}
-                    </FormItem>
-                    <FormItem {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">Register</Button>
-                    </FormItem>
-                    <Link to="/login">to login</Link>
-                </Form>
+            <div className="form-parent">
+                <Spin spinning={isLoading}>
+                    <div id="components-form-demo-normal-login">
+                        <Form onSubmit={this.handleSubmit} className="login-form">
+                            <FormItem>
+                                {getFieldDecorator('username', {
+                                    rules: [{ required: true, message: 'Please input your username!' }],
+                                })(
+                                    <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('email', {
+                                    rules: [{
+                                        type: 'email', message: 'The input is not valid E-mail!',
+                                    }, {
+                                        required: true, message: 'Please input your E-mail!',
+                                    }],
+                                })(
+                                    <Input prefix={<Icon type="mail" style={{ fontSize: 13 }} />} placeholder="Email" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('password', {
+                                    rules: [{ required: true, message: 'Please input your Password!' }],
+                                })(
+                                    <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('agreed', {
+                                    valuePropName: 'checked',
+                                    initialValue: true,
+                                })(
+                                    <Checkbox>I have read the <a href="">agreement</a></Checkbox>
+                                )}
+                                <a className="login-form-forgot" href="">Forgot password</a>
+                                <Button type="primary" htmlType="submit" className="login-form-button">
+                                    Register
+                                </Button>
+                                Or <Link to='/login'>Login</Link>
+                            </FormItem>
+                        </Form>
+                    </div>
+                </Spin>
+            </div>
         );
     }
 }

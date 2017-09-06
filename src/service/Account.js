@@ -17,9 +17,9 @@ const doLogin = (loginForm) => {
         method: 'POST',
         headers: {
             "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            "Content-Type": "application/json"
         },
-        body: formatForm(loginForm)
+        body: JSON.stringify(loginForm)
     })
 };
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {inject, observer} from 'mobx-react';
-import { Form, Input, Button, Spin, message } from 'antd';
+import { Form, Input, Button, Spin, message, Icon, Checkbox } from 'antd';
 import {Link, withRouter} from 'react-router-dom'
 
 const FormItem = Form.Item;
@@ -23,7 +23,8 @@ class RegistrationForm extends Component {
         this.props.user.login(formData)
             .then(result => {
                 if(!result.status){
-                    message.error('Network error...')
+                    message.error(result.msg);
+                    this.props.form.resetFields();
                 }else {
                     message.success('Login success, will redirect to homepage...');
                     setTimeout(() => {this.props.history.replace('/')}, 2000)
@@ -35,7 +36,7 @@ class RegistrationForm extends Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                this.fireLogin(values)
+                this.fireLogin(this.props.form.getFieldsValue())
             }
         });
     };
@@ -64,74 +65,42 @@ class RegistrationForm extends Component {
         const { getFieldDecorator } = this.props.form;
         const {isLoading} = this.props.user;
 
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24, offset: 0 },
-                sm: { span: 6, offset: 3 },
-                md: { span: 6, offset: 3 },
-                lg: { span: 6, offset: 3 },
-                xl: { span: 6, offset: 3 },
-            },
-            wrapperCol: {
-                xs: { span: 24, offset: 0 },
-                sm: { span: 6 },
-                md: { span: 6 },
-                lg: { span: 6 },
-                xl: { span: 6},
-            },
-        };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0,
-                },
-                sm: { span: 6, offset: 9 },
-                md: { span: 6, offset: 9 },
-                lg: { span: 6, offset: 9 },
-                xl: { span: 6, offset: 9 },
-            },
-        };
-
         return (
-            <Spin spinning={isLoading}>
-                <Form onSubmit={this.handleSubmit}>
-                    <FormItem
-                        {...formItemLayout}
-                        label="E-mail"
-                        hasFeedback
-                    >
-                        {getFieldDecorator('email', {
-                            rules: [{
-                                type: 'email', message: 'The input is not valid E-mail!',
-                            }, {
-                                required: true, message: 'Please input your E-mail!',
-                            }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem
-                        // {...formItemLayout}
-                        label="Password"
-                        hasFeedback
-                    >
-                        {getFieldDecorator('password', {
-                            rules: [{
-                                required: true, message: 'Please input your password!',
-                            }, {
-                                validator: this.checkConfirm,
-                            }],
-                        })(
-                            <Input type="password" />
-                        )}
-                    </FormItem>
-                    <FormItem {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">Login</Button>
-                    </FormItem>
-                    <Link to="/login">to login</Link>
-                </Form>
-            </Spin>
+            <div className="form-parent">
+                <Spin spinning={isLoading}>
+                    <div id="components-form-demo-normal-login">
+                        <Form onSubmit={this.handleSubmit} className="login-form">
+                            <FormItem>
+                                {getFieldDecorator('username', {
+                                    rules: [{ required: true, message: 'Please input your username!' }],
+                                })(
+                                    <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username or Email" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('password', {
+                                    rules: [{ required: true, message: 'Please input your Password!' }],
+                                })(
+                                    <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('agreed', {
+                                    valuePropName: 'checked',
+                                    initialValue: true,
+                                })(
+                                    <Checkbox>Remember me</Checkbox>
+                                )}
+                                <a className="login-form-forgot" href="">Forgot password</a>
+                                <Button type="primary" htmlType="submit" className="login-form-button">
+                                    Log in
+                                </Button>
+                                Or <Link to='/register'>Register</Link>
+                            </FormItem>
+                        </Form>
+                    </div>
+                </Spin>
+            </div>
         );
     }
 }
