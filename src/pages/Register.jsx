@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {inject, observer} from 'mobx-react';
-import { Form, Input, Checkbox, Button, Icon, Spin, message } from 'antd';
+import { Form, Input, Checkbox, Button, Icon, Spin, message, Row, Col } from 'antd';
 import {Link, withRouter} from 'react-router-dom'
 
 import './Register.css';
@@ -68,52 +68,54 @@ class RegistrationForm extends Component {
         const {isLoading} = this.props.user;
 
         return (
-            <div className="form-parent">
-                <Spin spinning={isLoading}>
-                    <div id="components-form-demo-normal-login">
-                        <Form onSubmit={this.handleSubmit} className="login-form">
-                            <FormItem>
-                                {getFieldDecorator('username', {
-                                    rules: [{ required: true, message: 'Please input your username!' }],
-                                })(
-                                    <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
-                                )}
-                            </FormItem>
-                            <FormItem>
-                                {getFieldDecorator('email', {
-                                    rules: [{
-                                        type: 'email', message: 'The input is not valid E-mail!',
-                                    }, {
-                                        required: true, message: 'Please input your E-mail!',
-                                    }],
-                                })(
-                                    <Input prefix={<Icon type="mail" style={{ fontSize: 13 }} />} placeholder="Email" />
-                                )}
-                            </FormItem>
-                            <FormItem>
-                                {getFieldDecorator('password', {
-                                    rules: [{ required: true, message: 'Please input your Password!' }],
-                                })(
-                                    <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
-                                )}
-                            </FormItem>
-                            <FormItem>
-                                {getFieldDecorator('agreed', {
-                                    valuePropName: 'checked',
-                                    initialValue: true,
-                                })(
-                                    <Checkbox>I have read the <a href="">agreement</a></Checkbox>
-                                )}
-                                <a className="login-form-forgot" href="">Forgot password</a>
-                                <Button type="primary" htmlType="submit" className="login-form-button">
-                                    Register
-                                </Button>
-                                Or <Link to='/login'>Login</Link>
-                            </FormItem>
-                        </Form>
-                    </div>
-                </Spin>
-            </div>
+            <Row type="flex" justify="space-around" align="middle" className='form-row'>
+                <Col xs={12} sm={8} md={6} lg={8} xl={10}>
+                    <Spin spinning={isLoading}>
+                        <div id="components-form-demo-normal-login">
+                            <Form onSubmit={this.handleSubmit} className="login-form">
+                                <FormItem>
+                                    {getFieldDecorator('username', {
+                                        rules: [{ required: true, message: 'Please input your username!' }],
+                                    })(
+                                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    {getFieldDecorator('email', {
+                                        rules: [{
+                                            type: 'email', message: 'The input is not valid E-mail!',
+                                        }, {
+                                            required: true, message: 'Please input your E-mail!',
+                                        }],
+                                    })(
+                                        <Input prefix={<Icon type="mail" style={{ fontSize: 13 }} />} placeholder="Email" />
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    {getFieldDecorator('password', {
+                                        rules: [{ required: true, message: 'Please input your Password!' }],
+                                    })(
+                                        <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+                                    )}
+                                </FormItem>
+                                <FormItem>
+                                    {getFieldDecorator('agreed', {
+                                        valuePropName: 'checked',
+                                        initialValue: true,
+                                    })(
+                                        <Checkbox>I have read the <a href="">agreement</a></Checkbox>
+                                    )}
+                                    <a className="login-form-forgot" href="">Forgot password</a>
+                                    <Button type="primary" htmlType="submit" className="login-form-button">
+                                        Register
+                                    </Button>
+                                    Or <Link to='/login'>Login</Link>
+                                </FormItem>
+                            </Form>
+                        </div>
+                    </Spin>
+                </Col>
+            </Row>
         );
     }
 }

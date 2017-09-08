@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {inject, observer} from 'mobx-react';
 
-import DashboardContent from './DashboardContent';
-import Message from './Message';
-import MessageAdd from './MessageAdd';
-import Posts from './Posts';
-import PostsAdd from './PostsAdd';
-import Tags from './Tags';
-import TagsAdd from './TagsAdd';
+import DashboardContent from '../components/DashboardContent';
+import Message from '../components/Message';
+import MessageAdd from '../components/MessageAdd';
+import Posts from '../components/Posts';
+import PostsAdd from '../components/PostsAdd';
+import Tags from '../components/Tags';
+import TagsAdd from '../components/TagsAdd';
 import {Route} from 'react-router-dom';
 
 import { Layout, Menu, Icon, Avatar, Badge } from 'antd';
@@ -19,7 +19,8 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 
-@inject('user')
+@inject('post')
+@withRouter
 @observer
 class Dashboard extends Component {
     state = {
@@ -100,11 +101,11 @@ class Dashboard extends Component {
                     <Header style={{ position: 'fixed', width: '100%', background: '#7f0000', padding: 0 }}>
                         <Badge dot><Avatar shape="square" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /></Badge>
                     </Header>
-                    <Content style={{ margin: '100px 16px 0', overflow: 'initial' }}>
+                    <Content style={{ margin: '80px 16px 0', overflow: 'initial' }} >
                         <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
                             <Route exact path={match.url} component={DashboardContent}/>
                             <Route path={`${match.url}/posts`} component={Posts}/>
-                            <Route path={`${match.url}/post_add`} component={PostsAdd}/>
+                            <Route path={`${match.url}/post_add`} component={PostsAdd} draft="'123"/>
                             <Route path={`${match.url}/tags`} component={Tags}/>
                             <Route path={`${match.url}/tag_add`} component={TagsAdd}/>
                             <Route path={`${match.url}/message_add`} component={MessageAdd}/>

@@ -10,10 +10,10 @@ import stores from './stores'
 import Main from './pages/Layout'
 import Register from './pages/Register'
 import Login from './pages/Login'
-import Dashboard from './pages/admin/Dashboard'
+import Dashboard from './pages/Dashboard'
 
 ReactDOM.render(
-    <Provider user={stores.user}>
+    <Provider user={stores.user} post={stores.post}>
         <BrowserRouter>
             <div>
                 <Route exact path='/' component={Main}/>

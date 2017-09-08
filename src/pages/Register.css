@@ -1,9 +1,5 @@
-.form-parent{
-    margin: 0 auto;
-}
-
-#components-form-demo-normal-login .login-form {
-    max-width: 300px;
+.form-row{
+    margin-top: 100px;
 }
 #components-form-demo-normal-login .login-form-forgot {
     float: right;
